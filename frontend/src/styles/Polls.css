@@ -1,0 +1,223 @@
+/* MAIN CONTAINER */
+
+.polls-container {
+  padding: 20px 30px;
+  background: #f4f7fb;
+  min-height: 100vh;
+}
+
+/* GLOBAL BUTTON STYLE */
+
+button {
+  font-weight: 500;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+/* HEADER */
+
+.polls-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* CREATE BUTTON */
+
+.create-btn {
+  padding: 10px 18px;
+  background: #2563eb;
+  color: white;
+}
+
+.create-btn:hover {
+  background: #1e40af;
+}
+
+/* TABS */
+
+.tabs {
+  margin: 20px 0;
+}
+
+.tabs button {
+  padding: 8px 18px;
+  margin-right: 10px;
+  background: #80aff5;
+}
+
+.tabs button:hover {
+  background: #87aedf;
+}
+
+.active-tab {
+  background: #2563eb !important;
+  color: white;
+}
+
+/* POLL CARD */
+
+.poll-card {
+  background: white;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* TITLE ROW (ALL INFO IN ONE LINE) */
+
+.poll-header-line {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.poll-header-line h3 {
+  margin: 0;
+}
+
+/* STATUS */
+
+.open {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.closed {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* LOCATION */
+
+.location {
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* OPTIONS (IND / NZ) */
+
+.options-container {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.vote-btn {
+  background: #2563eb !important;
+  color: white !important;
+  padding: 8px 16px;
+}
+
+.vote-btn:hover {
+  background: #1e40af !important;
+}
+
+.vote-btn:disabled {
+  background: #94a3b8 !important;
+}
+
+/* ACTION BUTTONS */
+
+.poll-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.edit-btn {
+  background: #0ea5e9 !important;
+  color: white !important;
+  padding: 8px 14px;
+}
+
+.delete-btn {
+  background: #ef4444 !important;
+  color: white !important;
+  padding: 8px 14px;
+}
+
+.close-btn {
+  background: #f59e0b !important;
+  color: white !important;
+  padding: 8px 14px;
+}
+
+/* FORM INPUTS */
+
+.create-form input,
+.create-form textarea {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+/* OPTION INPUT ROW */
+
+.option-input-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.option-input-row button {
+  background: #ef4444;
+  color: white;
+  padding: 8px 12px;
+}
+
+/* ADD OPTION BUTTON */
+
+.add-option-btn {
+  background: #2563eb;
+  color: white;
+  padding: 8px 14px;
+  margin-bottom: 15px;
+}
+
+.add-option-btn:hover {
+  background: #1e40af;
+}
+
+/* FORM BUTTONS */
+
+.form-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.form-buttons button:first-child {
+  background: #2563eb;
+  color: white;
+  padding: 10px 18px;
+}
+
+.form-buttons button:last-child {
+  background: #64748b;
+  color: white;
+  padding: 10px 18px;
+}
+
+/* CHART SECTION */
+
+.charts-container {
+  display: flex;
+  gap: 30px;
+  margin-top: 25px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+
+.chart-box {
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 12px;
+}
