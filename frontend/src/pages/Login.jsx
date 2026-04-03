@@ -22,10 +22,10 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        { email, password }
-      );
+      const res = await axios.post("http://localhost:5000/api/auth/login", {
+        email,
+        password,
+      });
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
@@ -40,24 +40,29 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
       <div className="max-w-5xl w-full bg-white rounded-3xl shadow-2xl flex flex-col md:flex-row overflow-hidden border border-slate-100">
-        
         {/* LEFT PANEL */}
-        <motion.div 
+        <motion.div
           initial={{ x: -20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           className="w-full md:w-1/2 bg-secondary-900 p-10 md:p-16 text-white flex flex-col justify-between relative overflow-hidden"
         >
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-12">
-              <div className="w-12 h-12 bg-primary-500 rounded-2xl flex items-center justify-center font-black text-2xl shadow-xl shadow-primary-500/20 italic">C</div>
-              <span className="text-3xl font-black tracking-tighter">Civix</span>
+              <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center font-black text-xl shadow-lg shadow-primary-500/20 italic">
+                C
+              </div>
+              <span className="text-3xl font-black tracking-tighter">
+                Civix
+              </span>
             </div>
-            
+
             <h1 className="text-4xl md:text-5xl font-black mb-6 leading-tight">
-              Empowering Civic <span className="text-primary-400">Engagement</span>
+              Empowering Civic{" "}
+              <span className="text-primary-400">Engagement</span>
             </h1>
             <p className="text-secondary-100 text-lg mb-12 font-medium opacity-80 leading-relaxed">
-              Join our platform to connect with local officials and make your voice heard in your community.
+              Join our platform to connect with local officials and make your
+              voice heard in your community.
             </p>
 
             <div className="space-y-5">
@@ -65,32 +70,23 @@ export default function Login() {
                 "Create and sign public petitions",
                 "Participate in community polls",
                 "Directly engage with local officials",
-                "Track progress on civic issues"
+                "Track progress on civic issues",
               ].map((feature, i) => (
-                <motion.div 
+                <motion.div
                   initial={{ x: -10, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.1 * (i + 1) }}
-                  key={i} 
+                  key={i}
                   className="flex items-center gap-4 text-secondary-50"
                 >
                   <div className="w-6 h-6 rounded-full bg-primary-500/20 flex items-center justify-center">
                     <CheckCircle2 className="w-4 h-4 text-primary-400" />
                   </div>
-                  <span className="text-sm font-bold tracking-wide">{feature}</span>
+                  <span className="text-sm font-bold tracking-wide">
+                    {feature}
+                  </span>
                 </motion.div>
               ))}
-            </div>
-          </div>
-
-          <div className="mt-16 flex items-center gap-10 pt-10 border-t border-secondary-800 relative z-10">
-            <div>
-              <div className="text-3xl font-black text-primary-400">15K+</div>
-              <div className="text-[10px] text-secondary-300 uppercase font-black tracking-widest mt-1">Active Users</div>
-            </div>
-            <div>
-              <div className="text-3xl font-black text-primary-400">3.2K</div>
-              <div className="text-[10px] text-secondary-300 uppercase font-black tracking-widest mt-1">Petitions Signed</div>
             </div>
           </div>
 
@@ -100,24 +96,37 @@ export default function Login() {
         </motion.div>
 
         {/* RIGHT PANEL */}
-        <motion.div 
+        <motion.div
           initial={{ x: 20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           className="w-full md:w-1/2 p-10 md:p-16 bg-white"
         >
           <div className="mb-12">
-            <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">Welcome Back</h2>
-            <p className="text-slate-500 font-medium">Please enter your details to sign in</p>
+            <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">
+              Welcome Back
+            </h2>
+            <p className="text-slate-500 font-medium">
+              Please enter your details to sign in
+            </p>
           </div>
 
           <div className="flex p-1.5 bg-slate-100 rounded-2xl mb-10 border border-slate-200">
-            <button className="flex-1 py-3 text-xs font-black uppercase tracking-widest text-secondary-700 bg-white rounded-xl shadow-md transition-all">Login</button>
-            <Link to="/register" className="flex-1 py-3 text-xs font-black uppercase tracking-widest text-slate-500 hover:text-slate-700 text-center transition-colors">Register</Link>
+            <button className="flex-1 py-3 text-xs font-black uppercase tracking-widest text-secondary-700 bg-white rounded-xl shadow-md transition-all">
+              Login
+            </button>
+            <Link
+              to="/register"
+              className="flex-1 py-3 text-xs font-black uppercase tracking-widest text-slate-500 hover:text-slate-700 text-center transition-colors"
+            >
+              Register
+            </Link>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-8">
             <div className="space-y-2.5">
-              <label className="text-xs font-black text-slate-400 uppercase tracking-widest block px-1">Email Address</label>
+              <label className="text-xs font-black text-slate-400 uppercase tracking-widest block px-1">
+                Email Address
+              </label>
               <div className="relative group">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-secondary-500 transition-colors" />
                 <input
@@ -133,8 +142,14 @@ export default function Login() {
 
             <div className="space-y-2.5">
               <div className="flex justify-between items-center px-1">
-                <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Password</label>
-                <Link to="/forgot-password" size="sm" className="text-[10px] text-secondary-600 hover:text-secondary-700 font-black uppercase tracking-widest">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest">
+                  Password
+                </label>
+                <Link
+                  to="/forgot-password"
+                  size="sm"
+                  className="text-[10px] text-secondary-600 hover:text-secondary-700 font-black uppercase tracking-widest"
+                >
                   Forgot?
                 </Link>
               </div>
@@ -151,18 +166,20 @@ export default function Login() {
               </div>
             </div>
 
-            <motion.button 
+            <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               disabled={isLoading}
-              type="submit" 
+              type="submit"
               className="btn-secondary w-full flex items-center justify-center gap-3 py-4 shadow-xl shadow-secondary-600/20"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
                 <>
-                  <span className="font-black uppercase tracking-[0.2em]">Sign In</span>
+                  <span className="font-black uppercase tracking-[0.2em]">
+                    Sign In
+                  </span>
                   <ArrowRight className="w-5 h-5" />
                 </>
               )}
@@ -171,7 +188,10 @@ export default function Login() {
 
           <p className="mt-12 text-center text-sm text-slate-500 font-medium">
             Don't have an account?{" "}
-            <Link to="/register" className="text-primary-600 font-black hover:text-primary-700 transition-colors">
+            <Link
+              to="/register"
+              className="text-primary-600 font-black hover:text-primary-700 transition-colors"
+            >
               Create one for free
             </Link>
           </p>

@@ -9,8 +9,8 @@ const petitionSchema = new mongoose.Schema(
 
   status: {
     type: String,
-    enum: ["active", "under_review", "closed"],
-    default: "active",
+    enum: ["pending", "active", "under_review", "closed", "rejected"],
+    default: "pending",
   },
 
   goal: {

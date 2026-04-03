@@ -80,7 +80,7 @@ export default function Register() {
         >
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-12">
-              <div className="w-12 h-12 bg-primary-500 rounded-2xl flex items-center justify-center font-black text-2xl shadow-xl shadow-primary-500/20 italic">
+              <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center font-black text-xl shadow-lg shadow-primary-500/20 italic">
                 C
               </div>
               <span className="text-3xl font-black tracking-tighter">

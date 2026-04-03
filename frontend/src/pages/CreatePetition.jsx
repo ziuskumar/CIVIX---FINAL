@@ -81,82 +81,97 @@ export default function CreatePetition({ editId, onBack, close }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden">
-      <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-        <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-          {editId ? <Save className="w-5 h-5 text-primary-600" /> : <Plus className="w-5 h-5 text-primary-600" />}
-          {editId ? "Edit Petition" : "Create New Petition"}
-        </h2>
+    <div className="bg-white rounded-3xl overflow-hidden shadow-2xl">
+      <div className="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-white relative overflow-hidden">
+        <div className="relative z-10">
+          <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+            <div className="p-2 bg-primary-100 rounded-xl">
+              {editId ? <Save className="w-6 h-6 text-primary-600" /> : <Plus className="w-6 h-6 text-primary-600" />}
+            </div>
+            {editId ? "Update Petition" : "Launch New Petition"}
+          </h2>
+          <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mt-1 ml-11">
+            {editId ? "Refine your cause for better engagement" : "Start a movement in your community today"}
+          </p>
+        </div>
         <button 
           onClick={handleClose}
-          className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400 hover:text-slate-600"
+          className="p-3 hover:bg-slate-100 rounded-2xl transition-all text-slate-400 hover:text-red-500 relative z-10 border border-transparent hover:border-red-100"
         >
-          <X className="w-5 h-5" />
+          <X className="w-6 h-6" />
         </button>
+        
+        {/* Abstract Background Shapes */}
+        <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary-50 rounded-full blur-2xl opacity-50"></div>
       </div>
 
-      <form onSubmit={handleSubmit} className="p-6 space-y-6">
-        <div className="space-y-2">
-          <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-            <FileText className="w-4 h-4 text-slate-400" />
+      <form onSubmit={handleSubmit} className="p-8 space-y-8">
+        <div className="space-y-3">
+          <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2 px-1">
+            <FileText className="w-4 h-4 text-primary-500" />
             Petition Title
           </label>
           <input
             name="title"
             placeholder="e.g., Fix the potholes on Main Street"
-            className="input-field"
+            className="input-field py-4 bg-slate-50 border-transparent focus:bg-white focus:border-primary-500 shadow-inner font-bold"
             value={form.title}
             onChange={handleChange}
             required
           />
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-            <AlignLeft className="w-4 h-4 text-slate-400" />
+        <div className="space-y-3">
+          <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2 px-1">
+            <AlignLeft className="w-4 h-4 text-secondary-500" />
             Description
           </label>
           <textarea
             name="description"
             placeholder="Provide details about the issue and your proposed solution..."
-            className="input-field min-h-[120px] resize-none"
+            className="input-field min-h-[160px] resize-none py-4 bg-slate-50 border-transparent focus:bg-white focus:border-secondary-500 shadow-inner font-medium leading-relaxed"
             value={form.description}
             onChange={handleChange}
             required
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-              <Tag className="w-4 h-4 text-slate-400" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-3">
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2 px-1">
+              <Tag className="w-4 h-4 text-emerald-500" />
               Category
             </label>
-            <select
-              name="category"
-              className="input-field appearance-none bg-white"
-              value={form.category}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select Category</option>
-              <option value="Environment">Environment</option>
-              <option value="Education">Education</option>
-              <option value="Infrastructure">Infrastructure</option>
-              <option value="Public Safety">Public Safety</option>
-              <option value="Healthcare">Healthcare</option>
-            </select>
+            <div className="relative group">
+              <select
+                name="category"
+                className="input-field appearance-none bg-slate-50 border-transparent focus:bg-white focus:border-emerald-500 shadow-inner font-bold py-4 pr-10"
+                value={form.category}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Category</option>
+                <option value="Environment">Environment</option>
+                <option value="Education">Education</option>
+                <option value="Infrastructure">Infrastructure</option>
+                <option value="Public Safety">Public Safety</option>
+                <option value="Healthcare">Healthcare</option>
+              </select>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                <Plus className="w-4 h-4 rotate-45" />
+              </div>
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-slate-400" />
+          <div className="space-y-3">
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2 px-1">
+              <MapPin className="w-4 h-4 text-blue-500" />
               Location
             </label>
             <input
               name="location"
               placeholder="City, Neighborhood"
-              className="input-field"
+              className="input-field py-4 bg-slate-50 border-transparent focus:bg-white focus:border-blue-500 shadow-inner font-bold"
               value={form.location}
               onChange={handleChange}
               required
@@ -164,45 +179,50 @@ export default function CreatePetition({ editId, onBack, close }) {
           </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-            <Target className="w-4 h-4 text-slate-400" />
+        <div className="space-y-3">
+          <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2 px-1">
+            <Target className="w-4 h-4 text-amber-500" />
             Signature Goal
           </label>
-          <input
-            type="number"
-            name="goal"
-            placeholder="100"
-            className="input-field"
-            value={form.goal}
-            onChange={handleChange}
-            min="10"
-          />
-          <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wider px-1">Recommended minimum: 50 signatures</p>
+          <div className="relative">
+            <input
+              type="number"
+              name="goal"
+              placeholder="100"
+              className="input-field py-4 bg-slate-50 border-transparent focus:bg-white focus:border-amber-500 shadow-inner font-black"
+              value={form.goal}
+              onChange={handleChange}
+              min="10"
+            />
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">Signatures</div>
+          </div>
+          <p className="text-[9px] text-slate-400 font-black uppercase tracking-widest px-1">Tip: Smaller goals are easier to reach and gain momentum</p>
         </div>
 
-        <div className="pt-4 flex gap-3">
+        <div className="pt-6 flex flex-col sm:flex-row gap-4">
           <button 
             type="button"
             onClick={handleClose}
-            className="btn-secondary flex-1 py-3"
+            className="flex-1 py-4 px-6 rounded-2xl bg-slate-100 text-slate-600 text-xs font-black uppercase tracking-widest hover:bg-slate-200 transition-all border border-slate-200"
           >
-            Cancel
+            Discard
           </button>
-          <button 
+          <motion.button 
+            whileHover={{ scale: 1.02, y: -2 }}
+            whileTap={{ scale: 0.98 }}
             disabled={isLoading}
             type="submit" 
-            className="btn-primary flex-1 py-3 flex items-center justify-center gap-2 shadow-lg shadow-primary-600/20"
+            className="flex-[2] py-4 px-8 rounded-2xl bg-secondary-900 text-white text-xs font-black uppercase tracking-widest flex items-center justify-center gap-3 shadow-2xl shadow-secondary-900/20 hover:bg-secondary-800 transition-all"
           >
             {isLoading ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             ) : (
               <>
-                {editId ? "Update Petition" : "Launch Petition"}
+                <span>{editId ? "Update Changes" : "Launch Cause Now"}</span>
                 <Plus className="w-4 h-4" />
               </>
             )}
-          </button>
+          </motion.button>
         </div>
       </form>
     </div>

@@ -18,7 +18,6 @@ import Settings from "./pages/Settings";
 function App() {
   return (
     <>
-      <Navbar />
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
