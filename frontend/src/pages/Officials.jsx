@@ -24,7 +24,7 @@ export default function Officials() {
     const fetchOfficials = async () => {
       setIsLoading(true);
       try {
-        const res = await axios.get("http://localhost:5000/api/officials", {
+        const res = await axios.get("https://civix-backend-e7m5.onrender.com/api/officials", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setOfficials(res.data);
@@ -128,7 +128,7 @@ export default function Officials() {
                       <div className="w-20 h-20 rounded-3xl bg-secondary-600 flex items-center justify-center text-white text-3xl font-black shadow-xl shadow-secondary-600/20 overflow-hidden group-hover:scale-105 transition-transform duration-500 italic">
                         {off.profilePhoto ? (
                           <img
-                            src={`http://localhost:5000/uploads/${off.profilePhoto}`}
+                            src={`https://civix-backend-e7m5.onrender.com/uploads/${off.profilePhoto}`}
                             alt=""
                             className="w-full h-full object-cover"
                           />

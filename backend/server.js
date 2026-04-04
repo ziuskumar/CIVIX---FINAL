@@ -13,7 +13,12 @@ const server = http.createServer(app);
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://civix-frontend.onrender.com",
+      /\.onrender\.com$/,
+      /\.netlify\.app$/,
+    ],
     credentials: true,
   }),
 );
@@ -42,7 +47,12 @@ app.use("/api/admin", require("./routes/adminRoutes"));
 //  Socket.io Setup
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://civix-frontend.onrender.com",
+      /\.onrender\.com$/,
+      /\.netlify\.app$/,
+    ],
     methods: ["GET", "POST", "PUT"],
   },
 });

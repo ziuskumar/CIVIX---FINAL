@@ -57,14 +57,14 @@ const CreatePoll = ({ onBack, editData }) => {
       setLoading(true);
       if (editData) {
         await axios.put(
-          `http://localhost:5000/api/polls/update/${editData._id}`,
+          `https://civix-backend-e7m5.onrender.com/api/polls/update/${editData._id}`,
           { question, description, location, options },
           { headers: { Authorization: `Bearer ${token}` } }
         );
         alert("Poll Updated Successfully! ✅");
       } else {
         await axios.post(
-          "http://localhost:5000/api/polls",
+          "https://civix-backend-e7m5.onrender.com/api/polls",
           { question, description, location, options },
           { headers: { Authorization: `Bearer ${token}` } }
         );

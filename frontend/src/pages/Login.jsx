@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { Mail, Lock, ArrowRight, CheckCircle2 } from "lucide-react";
+import API from "../services/api";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+      const res = await axios.post("https://civix-backend-e7m5.onrender.com/api/auth/login", {
         email,
         password,
       });

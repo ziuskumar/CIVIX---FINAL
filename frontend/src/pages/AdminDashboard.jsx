@@ -25,7 +25,7 @@ import {
   ShieldCheck as ShieldCheckIcon,
 } from "lucide-react";
 
-const API = "http://localhost:5000/api/admin";
+const API = "https://civix-backend-e7m5.onrender.com/api/admin";
 
 export default function AdminDashboard() {
   const token = localStorage.getItem("token");

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
+import API from "../services/api";
 import {
   User,
   Mail,
@@ -54,7 +55,7 @@ export default function Register() {
 
     setIsLoading(true);
     try {
-      await axios.post("http://localhost:5000/api/auth/register", {
+      await axios.post("https://civix-backend-e7m5.onrender.com/api/auth/register", {
         ...form,
         role,
         governmentId: role === "official" ? form.governmentId : null,

@@ -47,10 +47,10 @@ export default function Dashboard() {
 
     try {
       const [dashRes, petRes] = await Promise.all([
-        axios.get("http://localhost:5000/api/dashboard", {
+        axios.get("https://civix-backend-e7m5.onrender.com/api/dashboard", {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        axios.get("http://localhost:5000/api/petitions", {
+        axios.get("https://civix-backend-e7m5.onrender.com/api/petitions", {
           headers: { Authorization: `Bearer ${token}` },
           params: { page: 1, limit: 3 },
         }),
@@ -69,7 +69,7 @@ export default function Dashboard() {
   useEffect(() => {
     fetchDashboard();
 
-    const socket = io("http://localhost:5000");
+    const socket = io("https://civix-backend-e7m5.onrender.com");
     socket.on("pollUpdated", fetchDashboard);
 
     return () => {
@@ -384,7 +384,7 @@ export default function Dashboard() {
                 <div className="w-12 h-12 rounded-xl bg-secondary-600 flex items-center justify-center text-white text-xl font-bold shadow-md overflow-hidden">
                   {data.profilePhoto ? (
                     <img
-                      src={`http://localhost:5000/uploads/${data.profilePhoto}`}
+                      src={`https://civix-backend-e7m5.onrender.com/uploads/${data.profilePhoto}`}
                       alt=""
                       className="w-full h-full object-cover"
                     />

@@ -15,7 +15,7 @@ export default function ForgotPassword() {
 
     try {
       await axios.post(
-        "http://localhost:5000/api/auth/forgot-password",
+        "https://civix-backend-e7m5.onrender.com/api/auth/forgot-password",
         { email }
       );
 

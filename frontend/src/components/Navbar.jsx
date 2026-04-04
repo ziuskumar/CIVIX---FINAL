@@ -95,7 +95,7 @@ export default function Navbar() {
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-700 font-bold overflow-hidden border border-slate-300">
                 {user.profilePhoto ? (
-                  <img src={`http://localhost:5000/uploads/${user.profilePhoto}`} alt="" className="w-full h-full object-cover" />
+                  <img src={`https://civix-backend-e7m5.onrender.com/uploads/${user.profilePhoto}`} alt="" className="w-full h-full object-cover" />
                 ) : (
                   user.name?.charAt(0).toUpperCase()
                 )}

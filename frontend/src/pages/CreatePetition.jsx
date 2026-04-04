@@ -27,7 +27,7 @@ export default function CreatePetition({ editId, onBack, close }) {
   useEffect(() => {
     if (editId) {
       axios
-        .get(`http://localhost:5000/api/petitions/${editId}`, {
+        .get(`https://civix-backend-e7m5.onrender.com/api/petitions/${editId}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -51,12 +51,12 @@ export default function CreatePetition({ editId, onBack, close }) {
 
     try {
       if (editId) {
-        await axios.put(`http://localhost:5000/api/petitions/${editId}`, form, {
+        await axios.put(`https://civix-backend-e7m5.onrender.com/api/petitions/${editId}`, form, {
           headers: { Authorization: `Bearer ${token}` },
         });
         alert("Petition Updated Successfully!");
       } else {
-        await axios.post("http://localhost:5000/api/petitions", form, {
+        await axios.post("https://civix-backend-e7m5.onrender.com/api/petitions", form, {
           headers: { Authorization: `Bearer ${token}` },
         });
         alert("Petition Created Successfully!");

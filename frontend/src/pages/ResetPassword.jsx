@@ -22,7 +22,7 @@ export default function ResetPassword() {
 
     try {
       await axios.post(
-        "http://localhost:5000/api/auth/reset-password",
+        "https://civix-backend-e7m5.onrender.com/api/auth/reset-password",
         form
       );
 

@@ -34,7 +34,7 @@ export default function Settings() {
   });
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/settings/profile", {
+    fetch("https://civix-backend-e7m5.onrender.com/api/settings/profile", {
       headers: { Authorization: token }
     })
     .then(res => res.json())
@@ -51,7 +51,7 @@ export default function Settings() {
 
   const updateProfile = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/settings/profile", {
+      const res = await fetch("https://civix-backend-e7m5.onrender.com/api/settings/profile", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -79,7 +79,7 @@ export default function Settings() {
       return;
     }
     try {
-      const res = await fetch("http://localhost:5000/api/settings/password", {
+      const res = await fetch("https://civix-backend-e7m5.onrender.com/api/settings/password", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -102,7 +102,7 @@ export default function Settings() {
   const toggleNotifications = async () => {
     const updated = !profile.notifications;
     try {
-      const res = await fetch("http://localhost:5000/api/settings/notifications", {
+      const res = await fetch("https://civix-backend-e7m5.onrender.com/api/settings/notifications", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -136,7 +136,7 @@ export default function Settings() {
     form.append("photo", photo);
 
     try {
-      const res = await fetch("http://localhost:5000/api/settings/photo", {
+      const res = await fetch("https://civix-backend-e7m5.onrender.com/api/settings/photo", {
         method: "POST",
         headers: { Authorization: token },
         body: form
@@ -215,7 +215,7 @@ export default function Settings() {
                         {preview ? (
                           <img src={preview} alt="Preview" className="w-full h-full object-cover" />
                         ) : profile.profilePhoto ? (
-                          <img src={`http://localhost:5000/uploads/${profile.profilePhoto}`} alt="Profile" className="w-full h-full object-cover" />
+                          <img src={`https://civix-backend-e7m5.onrender.com/uploads/${profile.profilePhoto}`} alt="Profile" className="w-full h-full object-cover" />
                         ) : (
                           <User className="w-10 h-10" />
                         )}
