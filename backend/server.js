@@ -57,3 +57,7 @@ app.listen(process.env.PORT || 5000, () => {
   console.log("Server running");
 });
 
+app.get("/", (req, res) => {
+  res.send("CIVIX Backend is Running 🚀");
+});
+
