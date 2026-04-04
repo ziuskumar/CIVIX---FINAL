@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { io } from "socket.io-client";
 import { motion, AnimatePresence } from "framer-motion";
+import API from "../services/api";
 import {
   BarChart as ReBarChart,
   Bar,
@@ -26,7 +27,7 @@ import {
 } from "lucide-react";
 import CreatePoll from "./CreatePoll";
 
-const socket = io("https://civix-backend-e7m5.onrender.com");
+const socket = io(API);
 
 const Polls = () => {
   const token = localStorage.getItem("token");
@@ -47,7 +48,7 @@ const Polls = () => {
   const fetchPolls = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get("https://civix-backend-e7m5.onrender.com/api/polls", {
+      const res = await axios.get(`${API}/api/polls`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPolls(res.data);
@@ -61,7 +62,7 @@ const Polls = () => {
   const vote = async (id, index) => {
     try {
       await axios.put(
-        `https://civix-backend-e7m5.onrender.com/api/polls/vote/${id}`,
+        `${API}/api/polls/vote/${id}`,
         { optionIndex: index },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -74,7 +75,7 @@ const Polls = () => {
   const deletePoll = async (id) => {
     if (!window.confirm("Delete this poll?")) return;
     try {
-      await axios.delete(`https://civix-backend-e7m5.onrender.com/api/polls/delete/${id}`, {
+      await axios.delete(`${API}/api/polls/delete/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchPolls();
@@ -86,7 +87,7 @@ const Polls = () => {
   const closePoll = async (id) => {
     if (!window.confirm("Close this poll?")) return;
     try {
-      await axios.put(`https://civix-backend-e7m5.onrender.com/api/polls/close/${id}`, {}, {
+      await axios.put(`${API}/api/polls/close/${id}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchPolls();

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
+import API from "../services/api";
 import {
   MapPin,
   Tag,
@@ -39,7 +40,7 @@ export default function Petitions() {
   const fetchPetitions = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get("https://civix-backend-e7m5.onrender.com/api/petitions", {
+      const res = await axios.get(`${API}/api/petitions`, {
         params: { page, limit: 5, category, location },
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -59,7 +60,7 @@ export default function Petitions() {
   const handleSign = async (id) => {
     try {
       const res = await axios.put(
-        `https://civix-backend-e7m5.onrender.com/api/petitions/sign/${id}`,
+        `${API}/api/petitions/sign/${id}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -75,7 +76,7 @@ export default function Petitions() {
       return;
     try {
       const res = await axios.put(
-        `https://civix-backend-e7m5.onrender.com/api/petitions/close/${id}`,
+        `${API}/api/petitions/close/${id}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -89,7 +90,7 @@ export default function Petitions() {
   const handleApprove = async (id) => {
     try {
       const res = await axios.put(
-        `https://civix-backend-e7m5.onrender.com/api/petitions/approve/${id}`,
+        `${API}/api/petitions/approve/${id}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -103,7 +104,7 @@ export default function Petitions() {
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this petition? This cannot be undone.")) return;
     try {
-      await axios.delete(`https://civix-backend-e7m5.onrender.com/api/petitions/${id}`, {
+      await axios.delete(`${API}/api/petitions/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchPetitions();
@@ -119,7 +120,7 @@ export default function Petitions() {
     }
     try {
       await axios.post(
-        `https://civix-backend-e7m5.onrender.com/api/petitions/respond/${id}`,
+        `${API}/api/petitions/respond/${id}`,
         { comment: responseText[id] },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -133,7 +134,7 @@ export default function Petitions() {
   const handleAdminApprove = async (id) => {
     try {
       await axios.put(
-        `https://civix-backend-e7m5.onrender.com/api/admin/petitions/${id}/approve`,
+        `${API}/api/admin/petitions/${id}/approve`,
         {},
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -146,7 +147,7 @@ export default function Petitions() {
   const handleAdminDisapprove = async (id) => {
     try {
       await axios.put(
-        `https://civix-backend-e7m5.onrender.com/api/admin/petitions/${id}/reject`,
+        `${API}/api/admin/petitions/${id}/reject`,
         { reason: "Disapproved by admin" },
         { headers: { Authorization: `Bearer ${token}` } },
       );

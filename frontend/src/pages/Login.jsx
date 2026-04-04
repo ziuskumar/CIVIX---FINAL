@@ -23,7 +23,7 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const res = await axios.post("https://civix-backend-e7m5.onrender.com/api/auth/login", {
+      const res = await axios.post(`${API}/api/auth/login`, {
         email,
         password,
       });

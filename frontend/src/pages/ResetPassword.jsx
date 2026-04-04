@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { Mail, Lock, ShieldCheck, ArrowRight, ArrowLeft } from "lucide-react";
+import API from "../services/api";
 
 export default function ResetPassword() {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ export default function ResetPassword() {
 
     try {
       await axios.post(
-        "https://civix-backend-e7m5.onrender.com/api/auth/reset-password",
+        `${API}/api/auth/reset-password`,
         form
       );
 

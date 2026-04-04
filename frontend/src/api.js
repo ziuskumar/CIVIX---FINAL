@@ -1,7 +1,8 @@
 import axios from "axios";
+import API from "./services/api";
 
 const API = axios.create({
-  baseURL: "https://civix-backend-e7m5.onrender.com/api"
+  baseURL: `${API}/api`
 });
 
 API.interceptors.request.use(config => {

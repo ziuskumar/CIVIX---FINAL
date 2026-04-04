@@ -55,7 +55,7 @@ export default function Register() {
 
     setIsLoading(true);
     try {
-      await axios.post("https://civix-backend-e7m5.onrender.com/api/auth/register", {
+      await axios.post(`${API}/api/auth/register`, {
         ...form,
         role,
         governmentId: role === "official" ? form.governmentId : null,

@@ -1,2 +1,2 @@
-const BASE_URL = "https://civix-backend-e7m5.onrender.com";
+const BASE_URL = API;
 export default BASE_URL;

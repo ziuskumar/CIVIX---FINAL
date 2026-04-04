@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
+import API from "../services/api";
 import {
   PieChart as PieChartIcon,
   FileText,
@@ -45,7 +46,7 @@ export default function Reports() {
     const fetch = async () => {
       setIsLoading(true);
       try {
-        const res = await axios.get("https://civix-backend-e7m5.onrender.com/api/reports", {
+        const res = await axios.get(`${API}/api/reports`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setReport(res.data);
@@ -149,7 +150,7 @@ export default function Reports() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() =>
-              window.open("https://civix-backend-e7m5.onrender.com/api/reports/export/csv")
+              window.open(`${API}/api/reports/export/csv`)
             }
             className="btn-outline flex items-center gap-2 py-3 px-5 shadow-sm text-xs font-black uppercase tracking-widest"
           >
@@ -159,7 +160,7 @@ export default function Reports() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() =>
-              window.open("https://civix-backend-e7m5.onrender.com/api/reports/export/pdf")
+              window.open(`${API}/api/reports/export/pdf`)
             }
             className="btn-secondary flex items-center gap-2 py-3 px-5 shadow-sm text-xs font-black uppercase tracking-widest"
           >

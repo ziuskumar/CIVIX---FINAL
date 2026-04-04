@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { Mail, ArrowRight, ArrowLeft, KeyRound } from "lucide-react";
+import API from "../services/api";
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ export default function ForgotPassword() {
 
     try {
       await axios.post(
-        "https://civix-backend-e7m5.onrender.com/api/auth/forgot-password",
+        `${API}/api/auth/forgot-password`,
         { email }
       );
 

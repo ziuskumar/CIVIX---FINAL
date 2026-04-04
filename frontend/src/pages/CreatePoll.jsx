@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
+import API from "../services/api";
 import { 
   X, 
   BarChart3, 
@@ -57,14 +58,14 @@ const CreatePoll = ({ onBack, editData }) => {
       setLoading(true);
       if (editData) {
         await axios.put(
-          `https://civix-backend-e7m5.onrender.com/api/polls/update/${editData._id}`,
+          `${API}/api/polls/update/${editData._id}`,
           { question, description, location, options },
           { headers: { Authorization: `Bearer ${token}` } }
         );
         alert("Poll Updated Successfully! ✅");
       } else {
         await axios.post(
-          "https://civix-backend-e7m5.onrender.com/api/polls",
+          `${API}/api/polls`,
           { question, description, location, options },
           { headers: { Authorization: `Bearer ${token}` } }
         );

@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { io } from "socket.io-client";
 import { motion, AnimatePresence } from "framer-motion";
+import API from "../services/api";
 import {
   LayoutDashboard,
   FileText,
@@ -47,10 +48,10 @@ export default function Dashboard() {
 
     try {
       const [dashRes, petRes] = await Promise.all([
-        axios.get("https://civix-backend-e7m5.onrender.com/api/dashboard", {
+        axios.get(`${API}/api/dashboard`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        axios.get("https://civix-backend-e7m5.onrender.com/api/petitions", {
+        axios.get(`${API}/api/petitions`, {
           headers: { Authorization: `Bearer ${token}` },
           params: { page: 1, limit: 3 },
         }),
@@ -69,7 +70,7 @@ export default function Dashboard() {
   useEffect(() => {
     fetchDashboard();
 
-    const socket = io("https://civix-backend-e7m5.onrender.com");
+    const socket = io(API);
     socket.on("pollUpdated", fetchDashboard);
 
     return () => {
@@ -384,7 +385,7 @@ export default function Dashboard() {
                 <div className="w-12 h-12 rounded-xl bg-secondary-600 flex items-center justify-center text-white text-xl font-bold shadow-md overflow-hidden">
                   {data.profilePhoto ? (
                     <img
-                      src={`https://civix-backend-e7m5.onrender.com/uploads/${data.profilePhoto}`}
+                      src={`${API}/uploads/${data.profilePhoto}`}
                       alt=""
                       className="w-full h-full object-cover"
                     />

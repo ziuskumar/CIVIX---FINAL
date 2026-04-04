@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
+import API from "../services/api";
 import {
   Users,
   FileText,
@@ -24,8 +25,9 @@ import {
   UserPlus,
   ShieldCheck as ShieldCheckIcon,
 } from "lucide-react";
+import BASE_URL from "../services/api";
 
-const API = "https://civix-backend-e7m5.onrender.com/api/admin";
+const API = `${BASE_URL}/api/admin`;
 
 export default function AdminDashboard() {
   const token = localStorage.getItem("token");
