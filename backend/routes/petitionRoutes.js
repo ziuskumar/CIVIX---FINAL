@@ -102,10 +102,11 @@ router.put("/sign/:id", auth, async (req, res) => {
       return res.status(404).json({ message: "Petition not found" });
 
     if (petition.status !== "active")
-      return res.status(400).json({ message: "Petition not active" });
+      return res.status(400).json({ message: "Petition must be approved by an admin before it can be signed." });
 
-    if (petition.signatures.includes(req.user.id))
-      return res.status(400).json({ message: "Already signed" });
+    const alreadySigned = petition.signatures.some(id => id.toString() === req.user.id);
+    if (alreadySigned)
+      return res.status(400).json({ message: "You have already signed this petition." });
 
     petition.signatures.push(req.user.id);
 

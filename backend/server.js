@@ -4,6 +4,9 @@ const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
 require("dotenv").config();
+// const User = require("./models/test");
+
+
 
 const app = express();
 const server = http.createServer(app);
@@ -22,6 +25,7 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log(err));
+
 
 // Routes
 app.use("/api/auth", require("./routes/authRoutes"));
@@ -49,7 +53,7 @@ io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 });
 
-const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(process.env.PORT || 5000, () => {
+  console.log("Server running");
 });
+

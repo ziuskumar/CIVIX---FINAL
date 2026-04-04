@@ -112,31 +112,45 @@ export default function Officials() {
               >
                 <div className="p-8 flex-1 relative">
                   {/* Badge */}
-                  <div className="absolute -top-3 -right-3">
-                    <motion.div 
-                      whileHover={{ rotate: 15 }}
-                      className="bg-primary-500 text-white p-2.5 rounded-2xl shadow-lg shadow-primary-500/30"
-                    >
-                      <ShieldCheck className="w-5 h-5" />
-                    </motion.div>
-                  </div>
+                  {off.isVerified && (
+                    <div className="absolute -top-3 -right-3">
+                      <motion.div
+                        whileHover={{ rotate: 15 }}
+                        className="bg-primary-500 text-white p-2.5 rounded-2xl shadow-lg shadow-primary-500/30"
+                      >
+                        <ShieldCheck className="w-5 h-5" />
+                      </motion.div>
+                    </div>
+                  )}
 
                   <div className="flex items-center gap-5 mb-8">
                     <div className="relative">
                       <div className="w-20 h-20 rounded-3xl bg-secondary-600 flex items-center justify-center text-white text-3xl font-black shadow-xl shadow-secondary-600/20 overflow-hidden group-hover:scale-105 transition-transform duration-500 italic">
                         {off.profilePhoto ? (
-                          <img src={`http://localhost:5000/uploads/${off.profilePhoto}`} alt="" className="w-full h-full object-cover" />
+                          <img
+                            src={`http://localhost:5000/uploads/${off.profilePhoto}`}
+                            alt=""
+                            className="w-full h-full object-cover"
+                          />
                         ) : (
                           off.name?.charAt(0).toUpperCase()
                         )}
                       </div>
                     </div>
                     <div>
-                      <h3 className="text-xl font-black text-slate-900 group-hover:text-secondary-700 transition-colors leading-tight">{off.name}</h3>
-                      <div className="flex items-center gap-1.5 text-[10px] text-primary-600 font-black uppercase tracking-widest mt-1 bg-primary-50 px-2 py-1 rounded-lg w-fit">
-                        <Award className="w-3 h-3" />
-                        Verified Official
-                      </div>
+                      <h3 className="text-xl font-black text-slate-900 group-hover:text-secondary-700 transition-colors leading-tight">
+                        {off.name}
+                      </h3>
+                      {off.isVerified ? (
+                        <div className="flex items-center gap-1.5 text-[10px] text-primary-600 font-black uppercase tracking-widest mt-1 bg-primary-50 px-2 py-1 rounded-lg w-fit">
+                          <Award className="w-3 h-3" />
+                          Verified Official
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-black uppercase tracking-widest mt-1 bg-slate-50 px-2 py-1 rounded-lg w-fit">
+                          Community Official
+                        </div>
+                      )}
                     </div>
                   </div>
 

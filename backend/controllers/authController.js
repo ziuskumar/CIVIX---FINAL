@@ -8,8 +8,7 @@ exports.register = async (req, res) => {
     const { name, email, password, role, location, governmentId } = req.body;
 
     // 🔐 Strong Password Validation
-    const strongRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+    const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
 
     if (!strongRegex.test(password)) {
       return res.status(400).json({
@@ -37,7 +36,6 @@ exports.register = async (req, res) => {
     await user.save();
 
     res.status(201).json({ message: "Registered successfully" });
-
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });
@@ -54,16 +52,22 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
+    if (user.isBanned) {
+      return res
+        .status(403)
+        .json({
+          message: "Your account has been suspended. Please contact support.",
+        });
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
 
     res.json({
       token,
@@ -75,7 +79,6 @@ exports.login = async (req, res) => {
         location: user.location,
       },
     });
-
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });
@@ -109,10 +112,10 @@ exports.forgotPassword = async (req, res) => {
     });
 
     await transporter.sendMail({
-  from: `"Civix Support Team" <${process.env.EMAIL_USER}>`,
-  to: user.email,
-  subject: "🔐 Password Reset Request - Civix",
-  html: `
+      from: `"Civix Support Team" <${process.env.EMAIL_USER}>`,
+      to: user.email,
+      subject: "🔐 Password Reset Request - Civix",
+      html: `
     <div style="font-family: Arial, sans-serif; padding: 20px;">
       
       <h2 style="color:#2c3e50;">Hello ${user.name},</h2>
@@ -147,10 +150,9 @@ exports.forgotPassword = async (req, res) => {
 
     </div>
   `,
-});
+    });
 
     res.json({ message: "OTP sent to registered email" });
-
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });
@@ -166,16 +168,12 @@ exports.resetPassword = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (
-      user.resetOTP !== otp ||
-      user.resetOTPExpire < Date.now()
-    ) {
+    if (user.resetOTP !== otp || user.resetOTPExpire < Date.now()) {
       return res.status(400).json({ message: "Invalid or expired OTP" });
     }
 
     // 🔐 Strong Password Validation for Reset
-    const strongRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+    const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
 
     if (!strongRegex.test(newPassword)) {
       return res.status(400).json({
@@ -193,7 +191,6 @@ exports.resetPassword = async (req, res) => {
     await user.save();
 
     res.json({ message: "Password reset successful" });
-
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });

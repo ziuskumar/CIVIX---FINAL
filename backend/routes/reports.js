@@ -43,11 +43,22 @@ router.get("/", async (req, res) => {
     ]);
 
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const trendData = monthlyTrend.map(m => ({
-      month: monthNames[m._id.month - 1],
-      petitions: m.count,
-      signatures: m.signatures
-    }));
+    
+    // Fill in missing months for the last 6 months
+    const trendData = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date();
+      d.setMonth(d.getMonth() - i);
+      const year = d.getFullYear();
+      const month = d.getMonth() + 1; // 1-indexed for matching aggregation
+      
+      const found = monthlyTrend.find(m => m._id.year === year && m._id.month === month);
+      trendData.push({
+        month: monthNames[month - 1],
+        petitions: found ? found.count : 0,
+        signatures: found ? found.signatures : 0
+      });
+    }
 
     // Top category
     const topCategoryAgg = await Petition.aggregate([

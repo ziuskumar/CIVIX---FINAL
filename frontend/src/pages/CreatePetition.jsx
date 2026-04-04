@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { 
-  X, 
-  FileText, 
-  AlignLeft, 
-  Tag, 
-  MapPin, 
-  Target, 
-  Plus, 
-  Save 
+import {
+  X,
+  FileText,
+  AlignLeft,
+  Tag,
+  MapPin,
+  Target,
+  Plus,
+  Save,
 } from "lucide-react";
 
 export default function CreatePetition({ editId, onBack, close }) {
@@ -51,18 +51,14 @@ export default function CreatePetition({ editId, onBack, close }) {
 
     try {
       if (editId) {
-        await axios.put(
-          `http://localhost:5000/api/petitions/${editId}`,
-          form,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        await axios.put(`http://localhost:5000/api/petitions/${editId}`, form, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         alert("Petition Updated Successfully!");
       } else {
-        await axios.post(
-          "http://localhost:5000/api/petitions",
-          form,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        await axios.post("http://localhost:5000/api/petitions", form, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         alert("Petition Created Successfully!");
       }
 
@@ -86,21 +82,27 @@ export default function CreatePetition({ editId, onBack, close }) {
         <div className="relative z-10">
           <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-3">
             <div className="p-2 bg-primary-100 rounded-xl">
-              {editId ? <Save className="w-6 h-6 text-primary-600" /> : <Plus className="w-6 h-6 text-primary-600" />}
+              {editId ? (
+                <Save className="w-6 h-6 text-primary-600" />
+              ) : (
+                <Plus className="w-6 h-6 text-primary-600" />
+              )}
             </div>
             {editId ? "Update Petition" : "Launch New Petition"}
           </h2>
           <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mt-1 ml-11">
-            {editId ? "Refine your cause for better engagement" : "Start a movement in your community today"}
+            {editId
+              ? "Refine your cause for better engagement"
+              : "Start a movement in your community today"}
           </p>
         </div>
-        <button 
+        <button
           onClick={handleClose}
           className="p-3 hover:bg-slate-100 rounded-2xl transition-all text-slate-400 hover:text-red-500 relative z-10 border border-transparent hover:border-red-100"
         >
           <X className="w-6 h-6" />
         </button>
-        
+
         {/* Abstract Background Shapes */}
         <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary-50 rounded-full blur-2xl opacity-50"></div>
       </div>
@@ -194,25 +196,29 @@ export default function CreatePetition({ editId, onBack, close }) {
               onChange={handleChange}
               min="10"
             />
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">Signatures</div>
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">
+              Signatures
+            </div>
           </div>
-          <p className="text-[9px] text-slate-400 font-black uppercase tracking-widest px-1">Tip: Smaller goals are easier to reach and gain momentum</p>
+          <p className="text-[9px] text-slate-400 font-black uppercase tracking-widest px-1">
+            Tip: Smaller goals are easier to reach and gain momentum
+          </p>
         </div>
 
         <div className="pt-6 flex flex-col sm:flex-row gap-4">
-          <button 
+          <button
             type="button"
             onClick={handleClose}
             className="flex-1 py-4 px-6 rounded-2xl bg-slate-100 text-slate-600 text-xs font-black uppercase tracking-widest hover:bg-slate-200 transition-all border border-slate-200"
           >
             Discard
           </button>
-          <motion.button 
+          <motion.button
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
             disabled={isLoading}
-            type="submit" 
-            className="flex-[2] py-4 px-8 rounded-2xl bg-secondary-900 text-white text-xs font-black uppercase tracking-widest flex items-center justify-center gap-3 shadow-2xl shadow-secondary-900/20 hover:bg-secondary-800 transition-all"
+            type="submit"
+            className="flex-[2] py-4 px-8 rounded-2xl bg-primary-600 text-white text-xs font-black uppercase tracking-widest flex items-center justify-center gap-3 shadow-2xl shadow-primary-500/30 hover:bg-primary-700 transition-all"
           >
             {isLoading ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

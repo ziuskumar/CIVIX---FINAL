@@ -145,8 +145,8 @@ export default function Dashboard() {
               </motion.button>
 
               {/* Abstract Background Shapes */}
-              <div className="absolute -right-10 -top-10 w-40 h-40 bg-primary-50 rounded-full blur-3xl opacity-50 group-hover:scale-150 transition-transform duration-1000"></div>
-              <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-secondary-50 rounded-full blur-3xl opacity-50 group-hover:scale-150 transition-transform duration-1000"></div>
+              <div className="absolute -right-10 -top-10 w-40 h-40 bg-primary-50 rounded-full blur-3xl opacity-50 group-hover:scale-110 transition-transform duration-1000"></div>
+              <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-secondary-50 rounded-full blur-3xl opacity-50 group-hover:scale-110 transition-transform duration-1000"></div>
             </motion.div>
 
             {/* Stats Grid */}
@@ -257,7 +257,7 @@ export default function Dashboard() {
                           key={p._id}
                           whileHover={{ y: -5 }}
                           onClick={() => setActiveMenu("petitions")}
-                          className="card p-5 flex flex-col gap-4 hover:border-secondary-200 transition-all cursor-pointer group"
+                          className="card p-5 flex flex-col gap-4 hover:border-secondary-200 transition-[border-color,box-shadow,transform] duration-300 cursor-pointer group"
                         >
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 bg-secondary-50 rounded-lg flex items-center justify-center text-secondary-500 group-hover:bg-secondary-500 group-hover:text-white transition-all shrink-0 relative">

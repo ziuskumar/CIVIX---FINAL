@@ -10,13 +10,19 @@ const sendEmail = require("../utils/sendEmail");
 /* ─── STATS ─────────────────────────────────────────── */
 router.get("/stats", adminAuth, async (req, res) => {
   try {
-    const [totalUsers, totalPetitions, totalPolls, pendingPetitions] =
-      await Promise.all([
-        User.countDocuments(),
-        Petition.countDocuments(),
-        Poll.countDocuments(),
-        Petition.countDocuments({ status: "pending" }),
-      ]);
+    const [
+      totalUsers,
+      totalPetitions,
+      totalPolls,
+      pendingPetitions,
+      bannedUsers,
+    ] = await Promise.all([
+      User.countDocuments(),
+      Petition.countDocuments(),
+      Poll.countDocuments(),
+      Petition.countDocuments({ status: "pending" }),
+      User.countDocuments({ isBanned: true }),
+    ]);
 
     const sigAgg = await Petition.aggregate([
       { $project: { count: { $size: "$signatures" } } },
@@ -32,6 +38,7 @@ router.get("/stats", adminAuth, async (req, res) => {
       totalPetitions,
       totalPolls,
       pendingPetitions,
+      bannedUsers,
       totalSignatures: sigAgg[0]?.total || 0,
       roleBreakdown,
     });
@@ -72,6 +79,44 @@ router.put("/users/:id/role", adminAuth, async (req, res) => {
     res.json(user);
   } catch (err) {
     res.status(500).json({ message: "Error updating role" });
+  }
+});
+
+router.put("/users/:id/ban", adminAuth, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    if (user.role === "admin")
+      return res.status(400).json({ message: "Cannot ban admins" });
+
+    user.isBanned = !user.isBanned;
+    await user.save();
+    res.json({
+      message: user.isBanned ? "User banned" : "User unbanned",
+      user,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Error toggling ban" });
+  }
+});
+
+router.put("/users/:id/verify", adminAuth, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    if (user.role !== "official")
+      return res
+        .status(400)
+        .json({ message: "Only officials can be verified" });
+
+    user.isVerified = !user.isVerified;
+    await user.save();
+    res.json({
+      message: user.isVerified ? "Official verified" : "Verification removed",
+      user,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Error toggling verification" });
   }
 });
 
@@ -166,6 +211,39 @@ router.put("/petitions/:id/reject", adminAuth, async (req, res) => {
   }
 });
 
+router.put("/petitions/:id/status", adminAuth, async (req, res) => {
+  try {
+    const { status } = req.body;
+    const validStatuses = [
+      "pending",
+      "active",
+      "under_review",
+      "closed",
+      "rejected",
+    ];
+    if (!validStatuses.includes(status))
+      return res.status(400).json({ message: "Invalid status" });
+
+    const petition = await Petition.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true },
+    ).populate("createdBy", "name email");
+
+    if (!petition)
+      return res.status(404).json({ message: "Petition not found" });
+
+    await Notification.create({
+      userId: petition.createdBy._id,
+      message: `Your petition status changed to: ${status.replace("_", " ")}`,
+    });
+
+    res.json({ message: "Status updated", petition });
+  } catch (err) {
+    res.status(500).json({ message: "Error updating status" });
+  }
+});
+
 router.delete("/petitions/:id", adminAuth, async (req, res) => {
   try {
     const petition = await Petition.findByIdAndDelete(req.params.id);
@@ -174,6 +252,22 @@ router.delete("/petitions/:id", adminAuth, async (req, res) => {
     res.json({ message: "Petition deleted" });
   } catch (err) {
     res.status(500).json({ message: "Error deleting petition" });
+  }
+});
+
+router.put("/petitions/:id/edit", adminAuth, async (req, res) => {
+  try {
+    const { title, description, category, location } = req.body;
+    const petition = await Petition.findByIdAndUpdate(
+      req.params.id,
+      { title, description, category, location },
+      { new: true },
+    );
+    if (!petition)
+      return res.status(404).json({ message: "Petition not found" });
+    res.json({ message: "Petition updated", petition });
+  } catch (err) {
+    res.status(500).json({ message: "Error updating petition" });
   }
 });
 

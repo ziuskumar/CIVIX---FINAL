@@ -13,6 +13,16 @@ import {
   Search,
   RefreshCw,
   AlertCircle,
+  Ban,
+  ShieldAlert,
+  Edit3,
+  CheckCircle,
+  X,
+  Settings,
+  Bell,
+  Activity,
+  UserPlus,
+  ShieldCheck as ShieldCheckIcon,
 } from "lucide-react";
 
 const API = "http://localhost:5000/api/admin";
@@ -31,6 +41,19 @@ export default function AdminDashboard() {
   const [roleFilter, setRoleFilter] = useState("");
   const [petitionFilter, setPetitionFilter] = useState("");
   const [actionLoading, setActionLoading] = useState({}); // per-item loading
+
+  // Platform Settings State
+  const [announcement, setAnnouncement] = useState("");
+  const [isAnnouncing, setIsAnnouncing] = useState(false);
+
+  // Edit Petition Modal State
+  const [editingPetition, setEditingPetition] = useState(null);
+  const [editForm, setEditForm] = useState({
+    title: "",
+    description: "",
+    category: "",
+    location: "",
+  });
 
   useEffect(() => {
     fetchStats();
@@ -93,12 +116,63 @@ export default function AdminDashboard() {
   const changeRole = async (id, role) => {
     await axios.put(`${API}/users/${id}/role`, { role }, { headers });
     fetchUsers();
+    fetchStats();
+  };
+
+  const toggleBan = async (id) => {
+    setActionLoading((p) => ({ ...p, [id + "_ban"]: true }));
+    try {
+      await axios.put(`${API}/users/${id}/ban`, {}, { headers });
+      fetchUsers();
+      fetchStats();
+    } finally {
+      setActionLoading((p) => ({ ...p, [id + "_ban"]: false }));
+    }
+  };
+
+  const toggleVerify = async (id) => {
+    setActionLoading((p) => ({ ...p, [id + "_verify"]: true }));
+    try {
+      await axios.put(`${API}/users/${id}/verify`, {}, { headers });
+      fetchUsers();
+    } finally {
+      setActionLoading((p) => ({ ...p, [id + "_verify"]: false }));
+    }
+  };
+
+  const startEditing = (p) => {
+    setEditingPetition(p);
+    setEditForm({
+      title: p.title,
+      description: p.description,
+      category: p.category,
+      location: p.location,
+    });
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await axios.put(
+        `${API}/petitions/${editingPetition._id}/edit`,
+        editForm,
+        {
+          headers,
+        },
+      );
+      setEditingPetition(null);
+      fetchPetitions();
+    } finally {
+      setLoading(false);
+    }
   };
 
   const deleteUser = async (id) => {
     if (!window.confirm("Delete this user?")) return;
     await axios.delete(`${API}/users/${id}`, { headers });
     fetchUsers();
+    fetchStats();
   };
 
   const approvePetition = async (id) => {
@@ -107,6 +181,17 @@ export default function AdminDashboard() {
     setActionLoading((p) => ({ ...p, [id + "_approve"]: false }));
     fetchPetitions();
     fetchStats();
+  };
+
+  const updatePetitionStatus = async (id, status) => {
+    setActionLoading((p) => ({ ...p, [id + "_status"]: true }));
+    try {
+      await axios.put(`${API}/petitions/${id}/status`, { status }, { headers });
+      fetchPetitions();
+      fetchStats();
+    } finally {
+      setActionLoading((p) => ({ ...p, [id + "_status"]: false }));
+    }
   };
 
   const disapprovePetition = async (id) => {
@@ -149,10 +234,11 @@ export default function AdminDashboard() {
   };
 
   const tabs = [
-    { id: "overview", label: "Overview", icon: TrendingUp },
+    { id: "overview", label: "Overview", icon: Activity },
     { id: "petitions", label: "Petitions", icon: FileText },
     { id: "users", label: "Users", icon: Users },
     { id: "polls", label: "Polls", icon: BarChart3 },
+    { id: "settings", label: "Platform Settings", icon: Settings },
   ];
 
   const statusBadge = (status) => {
@@ -248,6 +334,12 @@ export default function AdminDashboard() {
                   value: stats.totalPolls,
                   icon: BarChart3,
                   color: "bg-green-500",
+                },
+                {
+                  label: "Banned Users",
+                  value: stats.bannedUsers || 0,
+                  icon: ShieldAlert,
+                  color: "bg-red-500",
                 },
               ].map((s, i) => (
                 <motion.div
@@ -366,7 +458,34 @@ export default function AdminDashboard() {
                           </span>
                         </div>
                       </div>
-                      <div className="flex flex-wrap gap-2 shrink-0">
+                      <div className="flex flex-wrap items-center gap-3 shrink-0">
+                        {/* Status Select */}
+                        <div className="relative group">
+                          <select
+                            value={p.status}
+                            onChange={(e) =>
+                              updatePetitionStatus(p._id, e.target.value)
+                            }
+                            disabled={actionLoading[p._id + "_status"]}
+                            className={`text-[10px] font-black uppercase tracking-widest border border-slate-200 rounded-xl px-4 py-2.5 bg-white cursor-pointer transition-all ${
+                              actionLoading[p._id + "_status"]
+                                ? "opacity-50"
+                                : ""
+                            }`}
+                          >
+                            <option value="pending">Pending</option>
+                            <option value="active">Active</option>
+                            <option value="under_review">Under Review</option>
+                            <option value="closed">Closed</option>
+                            <option value="rejected">Rejected</option>
+                          </select>
+                          {actionLoading[p._id + "_status"] && (
+                            <RefreshCw className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-purple-500 animate-spin" />
+                          )}
+                        </div>
+
+                        <div className="h-8 w-px bg-slate-100 hidden md:block"></div>
+
                         <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
@@ -375,7 +494,7 @@ export default function AdminDashboard() {
                             p.status === "active" ||
                             actionLoading[p._id + "_approve"]
                           }
-                          className="flex items-center gap-1.5 px-5 py-2.5 bg-green-500 text-white rounded-xl text-xs font-black hover:bg-green-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-green-500/20"
+                          className="flex items-center gap-1.5 px-5 py-2.5 bg-emerald-500 text-white rounded-xl text-xs font-black hover:bg-emerald-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/20"
                         >
                           {actionLoading[p._id + "_approve"] ? (
                             <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -400,7 +519,16 @@ export default function AdminDashboard() {
                           ) : (
                             <XCircle className="w-3.5 h-3.5" />
                           )}
-                          Disapprove
+                          Reject
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => startEditing(p)}
+                          className="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors border border-slate-200"
+                          title="Edit Content"
+                        >
+                          <Edit3 className="w-4 h-4" />
                         </motion.button>
                         <motion.button
                           whileHover={{ scale: 1.05 }}
@@ -487,10 +615,23 @@ export default function AdminDashboard() {
                     {users.map((u) => (
                       <tr
                         key={u._id}
-                        className="hover:bg-slate-50 transition-colors"
+                        className={`hover:bg-slate-50 transition-colors ${u.isBanned ? "bg-red-50/30" : ""}`}
                       >
-                        <td className="px-6 py-4 font-bold text-slate-900">
-                          {u.name}
+                        <td className="px-6 py-4">
+                          <div className="flex flex-col">
+                            <span className="font-bold text-slate-900 flex items-center gap-2">
+                              {u.name}
+                              {u.isVerified && (
+                                <CheckCircle className="w-3.5 h-3.5 text-blue-500" />
+                              )}
+                              {u.isBanned && (
+                                <Ban className="w-3.5 h-3.5 text-red-500" />
+                              )}
+                            </span>
+                            <span className="text-[10px] text-slate-400 font-bold uppercase">
+                              ID: {u._id.slice(-6)}
+                            </span>
+                          </div>
                         </td>
                         <td className="px-6 py-4 text-slate-500">{u.email}</td>
                         <td className="px-6 py-4">
@@ -511,12 +652,60 @@ export default function AdminDashboard() {
                           {new Date(u.createdAt).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4">
-                          <button
-                            onClick={() => deleteUser(u._id)}
-                            className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                          <div className="flex items-center gap-2">
+                            {u.role === "official" && (
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                onClick={() => toggleVerify(u._id)}
+                                disabled={actionLoading[u._id + "_verify"]}
+                                className={`p-2 rounded-xl transition-all border ${
+                                  u.isVerified
+                                    ? "bg-blue-500 text-white border-blue-600 shadow-md shadow-blue-500/20"
+                                    : "text-slate-400 hover:text-blue-500 hover:bg-blue-50 border-slate-200"
+                                }`}
+                                title={
+                                  u.isVerified
+                                    ? "Unverify Official"
+                                    : "Verify Official"
+                                }
+                              >
+                                {actionLoading[u._id + "_verify"] ? (
+                                  <RefreshCw className="w-4 h-4 animate-spin" />
+                                ) : (
+                                  <ShieldCheck className="w-4 h-4" />
+                                )}
+                              </motion.button>
+                            )}
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={() => toggleBan(u._id)}
+                              disabled={
+                                u.role === "admin" ||
+                                actionLoading[u._id + "_ban"]
+                              }
+                              className={`p-2 rounded-xl transition-all border ${
+                                u.isBanned
+                                  ? "bg-red-500 text-white border-red-600 shadow-md shadow-red-500/20"
+                                  : "text-slate-400 hover:text-red-500 hover:bg-red-50 border-slate-200"
+                              } ${u.role === "admin" ? "opacity-20 cursor-not-allowed" : ""}`}
+                              title={u.isBanned ? "Unban User" : "Ban User"}
+                            >
+                              {actionLoading[u._id + "_ban"] ? (
+                                <RefreshCw className="w-4 h-4 animate-spin" />
+                              ) : (
+                                <Ban className="w-4 h-4" />
+                              )}
+                            </motion.button>
+                            <button
+                              onClick={() => deleteUser(u._id)}
+                              className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors border border-slate-200"
+                              title="Delete Account"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -641,6 +830,212 @@ export default function AdminDashboard() {
               </div>
             )}
           </motion.div>
+        )}
+
+        {/* ── SETTINGS ── */}
+        {tab === "settings" && (
+          <motion.div
+            key="settings"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+          >
+            {/* Global Announcements */}
+            <div className="card p-8 space-y-6">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-purple-100 rounded-xl">
+                  <Bell className="w-5 h-5 text-purple-600" />
+                </div>
+                <h3 className="text-lg font-black text-slate-900">
+                  Global Announcement
+                </h3>
+              </div>
+              <p className="text-sm text-slate-500 font-medium">
+                Broadcast a message to all users on their dashboard.
+              </p>
+              <textarea
+                value={announcement}
+                onChange={(e) => setAnnouncement(e.target.value)}
+                placeholder="Type your announcement here..."
+                className="input-field min-h-[120px] resize-none py-4 text-sm font-medium"
+              />
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => {
+                  setIsAnnouncing(true);
+                  setTimeout(() => {
+                    setIsAnnouncing(false);
+                    setAnnouncement("");
+                    alert("Announcement broadcasted successfully!");
+                  }, 1500);
+                }}
+                disabled={!announcement || isAnnouncing}
+                className="w-full py-4 bg-purple-600 text-white rounded-2xl text-sm font-black uppercase tracking-widest hover:bg-purple-700 transition-all shadow-xl shadow-purple-600/20 disabled:opacity-50"
+              >
+                {isAnnouncing ? (
+                  <RefreshCw className="w-5 h-5 animate-spin mx-auto" />
+                ) : (
+                  "Broadcast Message"
+                )}
+              </motion.button>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="card p-8 space-y-6">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-blue-100 rounded-xl">
+                  <Activity className="w-5 h-5 text-blue-600" />
+                </div>
+                <h3 className="text-lg font-black text-slate-900">
+                  Quick Moderation
+                </h3>
+              </div>
+              <div className="grid grid-cols-1 gap-3">
+                <button className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-white transition-all group">
+                  <div className="flex items-center gap-3">
+                    <UserPlus className="w-5 h-5 text-slate-400 group-hover:text-blue-500" />
+                    <span className="text-sm font-bold text-slate-700">
+                      Pending Official Verifications
+                    </span>
+                  </div>
+                  <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-lg text-[10px] font-black">
+                    {users.filter((u) => u.role === "official" && !u.isVerified)
+                      .length || 0}
+                  </span>
+                </button>
+                <button className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-white transition-all group">
+                  <div className="flex items-center gap-3">
+                    <AlertCircle className="w-5 h-5 text-slate-400 group-hover:text-amber-500" />
+                    <span className="text-sm font-bold text-slate-700">
+                      Reports Needing Attention
+                    </span>
+                  </div>
+                  <span className="px-2 py-1 bg-amber-100 text-amber-700 rounded-lg text-[10px] font-black">
+                    12
+                  </span>
+                </button>
+                <button className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-white transition-all group">
+                  <div className="flex items-center gap-3">
+                    <ShieldAlert className="w-5 h-5 text-slate-400 group-hover:text-red-500" />
+                    <span className="text-sm font-bold text-slate-700">
+                      Recently Banned Users
+                    </span>
+                  </div>
+                  <span className="px-2 py-1 bg-red-100 text-red-700 rounded-lg text-[10px] font-black">
+                    {stats.bannedUsers || 0}
+                  </span>
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── EDIT MODAL ── */}
+      <AnimatePresence>
+        {editingPetition && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setEditingPetition(null)}
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-xl bg-white rounded-3xl shadow-2xl overflow-hidden p-8"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight">
+                  Edit Petition Content
+                </h2>
+                <button
+                  onClick={() => setEditingPetition(null)}
+                  className="p-2 hover:bg-slate-100 rounded-xl transition-colors"
+                >
+                  <X className="w-5 h-5 text-slate-400" />
+                </button>
+              </div>
+
+              <form onSubmit={handleEditSubmit} className="space-y-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                    Title
+                  </label>
+                  <input
+                    className="input-field py-3 font-bold"
+                    value={editForm.title}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, title: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                    Description
+                  </label>
+                  <textarea
+                    className="input-field py-3 min-h-[120px] resize-none"
+                    value={editForm.description}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, description: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                      Category
+                    </label>
+                    <input
+                      className="input-field py-3"
+                      value={editForm.category}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, category: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                      Location
+                    </label>
+                    <input
+                      className="input-field py-3"
+                      value={editForm.location}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, location: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="pt-4 flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setEditingPetition(null)}
+                    className="flex-1 py-3 text-sm font-black text-slate-500 hover:bg-slate-50 rounded-2xl transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex-1 py-3 bg-purple-600 text-white rounded-2xl text-sm font-black uppercase tracking-widest hover:bg-purple-700 transition-colors shadow-lg shadow-purple-600/20 disabled:opacity-50"
+                  >
+                    {loading ? "Saving..." : "Save Changes"}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>

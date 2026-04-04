@@ -249,12 +249,14 @@ export default function Petitions() {
             </p>
           </motion.div>
         ) : (
-          <AnimatePresence mode="popLayout">
+          <AnimatePresence mode="popLayout" initial={false}>
             {petitions.map((p, index) => {
               const isCreator =
                 p.createdBy?._id === userId || p.createdBy === userId;
               const isOfficial = user?.role === "official";
-              const alreadySigned = p.signatures?.includes(userId);
+              const alreadySigned = p.signatures?.some(
+                (id) => (id._id || id).toString() === userId?.toString(),
+              );
               const progress = Math.min(
                 ((p.signatures?.length || 0) / (p.goal || 100)) * 100,
                 100,
@@ -262,7 +264,6 @@ export default function Petitions() {
 
               return (
                 <motion.div
-                  layout
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -8, transition: { duration: 0.3 } }}
@@ -270,11 +271,11 @@ export default function Petitions() {
                   transition={{
                     delay: index * 0.05,
                     type: "spring",
-                    stiffness: 260,
+                    stiffness: 100,
                     damping: 20,
                   }}
                   key={p._id}
-                  className="card group hover:border-primary-200 transition-all shadow-sm hover:shadow-2xl hover:shadow-primary-500/5 bg-white flex flex-col h-full border-none"
+                  className="card group hover:border-primary-200 transition-[border-color,box-shadow] duration-300 shadow-sm hover:shadow-2xl hover:shadow-primary-500/5 bg-white flex flex-col h-full border-none"
                 >
                   <div className="p-8 flex-1 flex flex-col">
                     <div className="flex justify-between items-start gap-6 mb-8">
@@ -394,26 +395,42 @@ export default function Petitions() {
 
                     {/* Interaction Area */}
                     <div className="flex flex-col gap-4 mt-auto">
-                      {!isOfficial && !isAdmin && p.status === "active" && (
+                      {!isOfficial && !isAdmin && (
                         <motion.button
-                          whileHover={{ scale: 1.02, y: -2 }}
-                          whileTap={{ scale: 0.98 }}
+                          whileHover={
+                            p.status === "active" && !alreadySigned
+                              ? { scale: 1.02, y: -2 }
+                              : {}
+                          }
+                          whileTap={
+                            p.status === "active" && !alreadySigned
+                              ? { scale: 0.98 }
+                              : {}
+                          }
                           onClick={() => handleSign(p._id)}
-                          disabled={alreadySigned}
+                          disabled={alreadySigned || p.status !== "active"}
                           className={`flex items-center justify-center gap-3 py-5 rounded-2xl text-xs font-black uppercase tracking-[0.2em] transition-all shadow-xl ${
                             alreadySigned
                               ? "bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-none opacity-80"
-                              : "bg-secondary-900 text-white shadow-secondary-900/20 hover:bg-secondary-800"
+                              : p.status !== "active"
+                                ? "bg-slate-100 text-slate-400 border border-slate-200 shadow-none cursor-not-allowed"
+                                : "bg-primary-600 text-white shadow-primary-500/30 hover:bg-primary-700"
                           }`}
                         >
                           {alreadySigned ? (
                             <CheckCircle2 className="w-5 h-5" />
+                          ) : p.status === "pending" ? (
+                            <AlertCircle className="w-5 h-5" />
                           ) : (
                             <Plus className="w-5 h-5" />
                           )}
                           {alreadySigned
                             ? "Successfully Signed"
-                            : "Sign this Petition"}
+                            : p.status === "pending"
+                              ? "Awaiting Approval"
+                              : p.status === "active"
+                                ? "Sign this Petition"
+                                : "Closed"}
                         </motion.button>
                       )}
 
@@ -465,14 +482,26 @@ export default function Petitions() {
                             >
                               Send Response
                             </motion.button>
-                            <motion.button
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={() => handleClose(p._id)}
-                              className="bg-amber-100 text-amber-700 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-200 transition-all border border-amber-200"
-                            >
-                              Close Petition
-                            </motion.button>
+                            {p.status === "pending" ? (
+                              <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => handleApprove(p._id)}
+                                className="bg-emerald-500 text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20"
+                              >
+                                <CheckCircle2 className="w-4 h-4 mx-auto mb-1" />
+                                Approve Petition
+                              </motion.button>
+                            ) : (
+                              <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => handleClose(p._id)}
+                                className="bg-amber-100 text-amber-700 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-200 transition-all border border-amber-200"
+                              >
+                                Close Petition
+                              </motion.button>
+                            )}
                           </div>
                         </div>
                       )}

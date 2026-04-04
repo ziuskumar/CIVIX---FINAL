@@ -8,6 +8,7 @@ module.exports = function (req, res, next) {
   }
 
   try {
+    // Decode token to get user info
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // IMPORTANT: make sure JWT contains id and role
