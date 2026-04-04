@@ -1,2 +1,2 @@
-const API = "https://civix-backend-e7m5.onrender.com";
+const API = import.meta.env.VITE_API_URL
 export default API;
