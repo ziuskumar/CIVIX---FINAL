@@ -1,5 +1,8 @@
 # CIVIX – Digital Civic Engagement Platform
 
+🌐 Live Demo
+https://civixi.netlify.app/
+
 ## 📌 Project Overview
 
 CIVIX is a full-stack MERN application designed to enhance civic participation by allowing citizens to create petitions, vote on public issues, and interact with officials. The platform ensures transparency, accountability, and community-driven governance.
