@@ -6,6 +6,8 @@
 <img src="https://img.shields.io/badge/MongoDB-Database-47A248?style=for-the-badge&logo=mongodb&logoColor=white" />
 <img src="https://img.shields.io/badge/Auth-Passport.js-yellow?style=for-the-badge" />
 
+</div>
+
 # CIVIX – Digital Civic Engagement Platform
 
 🌐 Live Demo
