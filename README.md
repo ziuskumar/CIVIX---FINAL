@@ -1,3 +1,11 @@
+<div align="center">
+
+<img src="https://img.shields.io/badge/MERN-Stack-4DB33D?style=for-the-badge" />
+<img src="https://img.shields.io/badge/React-Frontend-61DAFB?style=for-the-badge&logo=react&logoColor=black" />
+<img src="https://img.shields.io/badge/Node.js-Backend-339933?style=for-the-badge&logo=node.js&logoColor=white" />
+<img src="https://img.shields.io/badge/MongoDB-Database-47A248?style=for-the-badge&logo=mongodb&logoColor=white" />
+<img src="https://img.shields.io/badge/Auth-Passport.js-yellow?style=for-the-badge" />
+
 # CIVIX – Digital Civic Engagement Platform
 
 🌐 Live Demo
